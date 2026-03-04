@@ -16,5 +16,17 @@ public class GlobalExceptionHandler {
     public ResponseEntity handleEmailAlreadyExistsException(EmailAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+
+    // Method to check if user does not exist and throw custom exception
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity handleEmailNotFoundException(EmailNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    //Method to check if password is incorrect and throw custom exception
+    @ExceptionHandler(IncorrectPasswordException.class)
+    public ResponseEntity handleIncorrectPasswordException(IncorrectPasswordException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
     
 }

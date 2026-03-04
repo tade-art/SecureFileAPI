@@ -3,8 +3,9 @@ package com.tade.secure_file_api.service;
 import java.time.LocalDate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.tade.secure_file_api.exception.EmailAlreadyExistsException;
+import com.tade.secure_file_api.exception.EmailNotFoundException;
+import com.tade.secure_file_api.exception.IncorrectPasswordException;
 import com.tade.secure_file_api.model.User;
 import com.tade.secure_file_api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,20 @@ public class UserService {
         
         //todo: change return so obj doesn't contain password
         return user;
+    }
+
+    // Method to handle user login - checks if email exists and if password matches, then generates a JWT token
+    public String login(String email, String password){
+        //checking for email
+        if(!userRepository.existsByEmail(email)){
+            throw new EmailNotFoundException("Email not found");
+        }
+
+        //checking for password
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new IncorrectPasswordException("Incorrect password");
+        }
+        //todo: generate and return JWT token
+        return "fake-jwt-token";
     }
 }
