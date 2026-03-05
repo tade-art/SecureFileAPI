@@ -8,6 +8,9 @@ import com.tade.secure_file_api.exception.EmailNotFoundException;
 import com.tade.secure_file_api.exception.IncorrectPasswordException;
 import com.tade.secure_file_api.model.User;
 import com.tade.secure_file_api.repository.UserRepository;
+import com.tade.secure_file_api.security.JwtUtil;
+
+import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 
 /* 
@@ -19,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     // Method to register a new user - checks if email already exists, encodes password, and saves user to DB
     public User registerUser(String email, String password){
@@ -38,16 +42,14 @@ public class UserService {
 
     // Method to handle user login - checks if email exists and if password matches, then generates a JWT token
     public String login(String email, String password){
-        //checking for email
-        if(!userRepository.existsByEmail(email)){
-            throw new EmailNotFoundException("Email not found");
-        }
+        //Grabbing user by email
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EmailNotFoundException("Email not found"));
 
         //checking for password
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new IncorrectPasswordException("Incorrect password");
         }
-        //todo: generate and return JWT token
-        return "fake-jwt-token";
+        //generate and return JWT token
+        return jwtUtil.generateToken(user);
     }
 }

@@ -2,6 +2,7 @@ package com.tade.secure_file_api.model;
 
 import java.time.LocalDate;
 import jakarta.persistence.*;
+import lombok.Data;
 
 /*
 * Added a User table with some basic fields
@@ -9,6 +10,7 @@ import jakarta.persistence.*;
 */
 
 @Entity
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
