@@ -3,6 +3,8 @@ package com.tade.secure_file_api.security;
 import java.security.Key;
 import java.util.Date;
 import org.springframework.stereotype.Component;
+
+import com.tade.secure_file_api.exception.BadTokenException;
 import com.tade.secure_file_api.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -21,5 +23,28 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(key)
                 .compact();
+    }
+
+    //Method to get email from token
+    public String getEmailFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    //Method to validate token (check signature and expiration)
+    public boolean isTokenValid(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            throw new BadTokenException("Invalid or expired token");
+        }
     }
 }

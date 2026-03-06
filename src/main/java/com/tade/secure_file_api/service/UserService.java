@@ -9,8 +9,6 @@ import com.tade.secure_file_api.exception.IncorrectPasswordException;
 import com.tade.secure_file_api.model.User;
 import com.tade.secure_file_api.repository.UserRepository;
 import com.tade.secure_file_api.security.JwtUtil;
-
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 
 /* 

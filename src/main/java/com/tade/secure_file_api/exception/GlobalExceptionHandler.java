@@ -28,5 +28,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity handleIncorrectPasswordException(IncorrectPasswordException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
+
+    ///Method to return an exception if a token is wrong or expired
+    @ExceptionHandler(BadTokenException.class)
+    public ResponseEntity handleBadTokenException(BadTokenException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
     
 }
