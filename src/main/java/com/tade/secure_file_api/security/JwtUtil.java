@@ -9,6 +9,9 @@ import com.tade.secure_file_api.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+/*
+* Utility class for JWT token operations
+*/
 @Component
 public class JwtUtil {
 

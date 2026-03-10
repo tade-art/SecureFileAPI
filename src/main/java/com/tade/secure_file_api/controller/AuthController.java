@@ -3,7 +3,6 @@ package com.tade.secure_file_api.controller;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,11 +35,5 @@ public class AuthController {
     public ResponseEntity login(@RequestBody UserRequest request){
         String token = userService.login(request.getEmail(), request.getPassword());
         return ResponseEntity.ok(Map.of("token", token));
-    }
-
-    // Test to verify JWT auth is working
-    @GetMapping("/test")
-    public String test() {
-        return "Secure endpoint works";
     }
 }

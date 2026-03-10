@@ -18,6 +18,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+/*
+* Filter for JWT authentication, validating tokens and setting security context
+*/
+
 @Component
 @RequiredArgsConstructor
 public class JWTAuthFilter extends OncePerRequestFilter {
@@ -25,16 +29,22 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
+    // Filter method to validate JWT token and set authentication context
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        //Grab auth header
         String authHeader = request.getHeader("Authorization");
+        // Validate auth header
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            // Extract token and validate
             String token = authHeader.substring(7);
             if (jwtUtil.isTokenValid(token)) {
+                // Extract email from token and load user details
                 String email = jwtUtil.getEmailFromToken(token);
                 User user =  userRepository.findByEmail(email).orElseThrow(() -> new BadTokenException("User not found for token"));
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getRole() == "ADMIN" ? List.of(() -> "ROLE_ADMIN") : List.of(() -> "ROLE_USER"));
+                // Set authentication in security context based on user role
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getRole().equals("ADMIN") ? List.of(() -> "ROLE_ADMIN") : List.of(() -> "ROLE_USER"));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

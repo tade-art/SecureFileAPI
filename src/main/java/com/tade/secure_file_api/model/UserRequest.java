@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+/*
+* Model for user request data, including email and password
+*/
 @Data
 @Getter
 @Setter
