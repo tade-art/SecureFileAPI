@@ -25,5 +25,5 @@ public class User {
 
     @Column(nullable = false)
     private String role;
-    private LocalDate createdAt;
+    private LocalDate createdAt = LocalDate.now();
 }
