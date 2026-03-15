@@ -58,7 +58,8 @@ public class FileController {
     // Endpoint for file download by id - change return type
     @GetMapping("/{id}")
     public ResponseEntity<Resource> downloadFileById(@PathVariable Long id) throws MalformedURLException {
-        File file = fileService.getFileById(id);
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        File file = fileService.getFileById(id,user);
         Path path = Paths.get(file.getFilepath());
         Resource resource = new UrlResource(path.toUri());
    

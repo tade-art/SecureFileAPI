@@ -56,8 +56,12 @@ public class FileService {
     }  
 
     // Method to get a file by its ID
-    public File getFileById(Long id){
+    public File getFileById(Long id, User user){
         File file = fileRepository.findById(id).orElseThrow(() -> new RuntimeException("File not found"));
+        
+        if (!file.getOwner().getId().equals(user.getId())) 
+            throw new RuntimeException("Illegal Attempt");
+       
         return file;
     }
 
