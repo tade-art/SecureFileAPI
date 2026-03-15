@@ -2,7 +2,6 @@ package com.tade.secure_file_api.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -49,7 +48,15 @@ public class FileController {
 
     // Endpoint for file deletion
     @DeleteMapping("/delete/{id}")
-    public boolean deleteFile(@PathVariable Long id) { return false;}
+    public ResponseEntity<?> deleteFile(@PathVariable Long id) throws IOException { 
+        boolean deleted = fileService.deleteFileById(id);
+        
+        if (deleted)
+            return ResponseEntity.ok(deleted);
+        else            
+            return ResponseEntity.status(500).body("Failed to delete file");
+    }
+
 
     // Endpoint for file download by id - change return type
     @GetMapping("/{id}")
@@ -57,8 +64,7 @@ public class FileController {
         File file = fileService.getFileById(id);
         Path path = Paths.get(file.getFilepath());
         Resource resource = new UrlResource(path.toUri());
-        // System.out.println("path: " + path.toAbsolutePath());
-        // System.out.println("even there? : " + Files.exists(path));
+   
         return ResponseEntity.ok()
         .header("Content-Disposition", "attachment; filename=\"" + file.getFilename() + "\"")
         .header("Content-Type", "application/octet-stream")
@@ -69,9 +75,9 @@ public class FileController {
     @GetMapping
     public ResponseEntity<List<File>> downloadFiles() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //System.out.println("User ID: " + user.getId());
+
         List<File> files = fileService.getAllFilesForUser(user.getId());
-        //System.out.println(files);
+
         return ResponseEntity.ok(files);
     }
 

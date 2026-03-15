@@ -67,7 +67,13 @@ public class FileService {
     }
 
     // Method to delete a file by its ID
-    public boolean deleteFileById(Long id, User user){
+    public boolean deleteFileById(Long id) throws IOException{
+        File file = fileRepository.findById(id).orElseThrow(null);
+        Path path = Paths.get(file.getFilepath());
+
+        Files.deleteIfExists(path);
+        fileRepository.deleteById(id);
+        
         return true;
     }
 }
