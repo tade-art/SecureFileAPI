@@ -54,8 +54,17 @@ curl -X POST http://localhost:8080/api/auth/login \
 curl -X POST http://localhost:8080/api/files/upload \
 -H "Authorization: Bearer <token>" \
 -F "file=@/path/to/file.txt"
-```
 
+# View all files for a user - example
+ curl -H "Authorization: Bearer <token>" \
+ http://localhost:8080/api/files  
+
+# Delete a file - example
+ curl -X DELETE \
+ -H "Authorization: Bearer <token>" \ 
+ http://localhost:8080/api/files/<fileID>
+
+```
 ---
 
 ## 3. `application.properties` (example)
