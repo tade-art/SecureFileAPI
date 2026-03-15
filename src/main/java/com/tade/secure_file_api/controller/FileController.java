@@ -1,6 +1,7 @@
 package com.tade.secure_file_api.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tade.secure_file_api.model.User;
 import com.tade.secure_file_api.service.FileService;
+import com.tade.secure_file_api.model.File;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,11 +47,17 @@ public class FileController {
     public boolean deleteFile(@PathVariable Long id) { return false;}
 
     // Endpoint for file download by id - change return type
-    @GetMapping("/download/{id}")
+    @GetMapping("/files/{id}")
     public void downloadFileById(@PathVariable Long id) {}
 
     // Endpoint for downloading all user files - change return type
-    @GetMapping("/download")
-    public void downloadFiles() {}
+    @GetMapping
+    public ResponseEntity<List<File>> downloadFiles() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //System.out.println("User ID: " + user.getId());
+        List<File> files = fileService.getAllFilesForUser(user.getId());
+        //System.out.println(files);
+        return ResponseEntity.ok(files);
+    }
 
 }

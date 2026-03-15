@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -60,15 +61,12 @@ public class FileService {
     }
 
     //Method to grab all files related to a user
-    public File[] getAllFilesForUser(User user){
-        return null;
+    public List<File> getAllFilesForUser(Long id){
+        return fileRepository.findByOwnerId(id);
     }
 
     // Method to delete a file by its ID
     public boolean deleteFileById(Long id, User user){
         return true;
     }
-
-
-
 }
