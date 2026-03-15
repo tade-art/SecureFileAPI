@@ -1,8 +1,13 @@
 package com.tade.secure_file_api.controller;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,8 +52,18 @@ public class FileController {
     public boolean deleteFile(@PathVariable Long id) { return false;}
 
     // Endpoint for file download by id - change return type
-    @GetMapping("/files/{id}")
-    public void downloadFileById(@PathVariable Long id) {}
+    @GetMapping("/{id}")
+    public ResponseEntity<Resource> downloadFileById(@PathVariable Long id) throws MalformedURLException {
+        File file = fileService.getFileById(id);
+        Path path = Paths.get(file.getFilepath());
+        Resource resource = new UrlResource(path.toUri());
+        // System.out.println("path: " + path.toAbsolutePath());
+        // System.out.println("even there? : " + Files.exists(path));
+        return ResponseEntity.ok()
+        .header("Content-Disposition", "attachment; filename=\"" + file.getFilename() + "\"")
+        .header("Content-Type", "application/octet-stream")
+        .body(resource);
+    }
 
     // Endpoint for downloading all user files - change return type
     @GetMapping

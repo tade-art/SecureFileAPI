@@ -57,7 +57,8 @@ public class FileService {
 
     // Method to get a file by its ID
     public File getFileById(Long id){
-        return null;
+        File file = fileRepository.findById(id).orElseThrow(() -> new RuntimeException("File not found"));
+        return file;
     }
 
     //Method to grab all files related to a user
