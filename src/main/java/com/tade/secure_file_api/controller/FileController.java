@@ -47,14 +47,15 @@ public class FileController {
     }
 
     // Endpoint for file deletion
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteFile(@PathVariable Long id) throws IOException { 
         boolean deleted = fileService.deleteFileById(id);
         
-        if (deleted)
-            return ResponseEntity.ok(deleted);
+        if (!deleted)
+            return ResponseEntity.status(404).build();
+            
         else            
-            return ResponseEntity.status(500).body("Failed to delete file");
+            return ResponseEntity.noContent().build();
     }
 
 
