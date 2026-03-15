@@ -48,14 +48,10 @@ public class FileController {
 
     // Endpoint for file deletion
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteFile(@PathVariable Long id) throws IOException { 
-        boolean deleted = fileService.deleteFileById(id);
-        
-        if (!deleted)
-            return ResponseEntity.status(404).build();
-            
-        else            
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteFile(@PathVariable Long id) throws IOException {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
+        fileService.deleteFileById(id, user);      
+        return ResponseEntity.noContent().build();
     }
 
 
